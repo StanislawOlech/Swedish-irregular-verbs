@@ -71,7 +71,7 @@ class Display:  # Klasa Display czyli frontend to co gracz widzi, spawn statkow 
         size = 0.6
         font = pygame.font.SysFont("Helvetica", int(size * x))
         symb = pygame.font.SysFont("Helvetica", x)
-        pygame.draw.rect(self.screen, color, [x, y, 2 * x, y]) # TODO wygląd
+        pygame.draw.rect(self.screen, color, [x, y, 2 * x, y])  # TODO wygląd
         pygame.draw.rect(self.screen, color, [4 * x, y, 2 * x, y])
         pygame.draw.rect(self.screen, color, [7 * x, y, 2 * x, y])
         pygame.draw.rect(self.screen, color, [10 * x, y, 2 * x, y])
@@ -154,7 +154,7 @@ class Display:  # Klasa Display czyli frontend to co gracz widzi, spawn statkow 
 
 
 def random_word():
-    new = words.iloc[randint(0, 158)].values.tolist()  # TODO rozmiar
+    new = words.iloc[randint(0, words.size // 5)].values.tolist()
     return word(new[0], new[1], new[2], new[3], new[4])
 
 
