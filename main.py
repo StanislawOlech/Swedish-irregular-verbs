@@ -9,7 +9,7 @@ class word:
     def __init__(self, infinitiv, presens, preteritum, supinum, trans):
         self.__swedish = [infinitiv, presens, preteritum, supinum]
         self.__shown = ["#"] * 4
-        self.__colours = ["white"] * 4
+        self.__colours = ["black"] * 4
         self.__trans = trans
         self.__index = -1
 
@@ -59,6 +59,7 @@ class Display:
         self.__word = ""
         self.__word_obj = word_obj
         self.__all = False
+        self.__closed = False
 
     def flip(self):
         pygame.display.flip()
@@ -67,28 +68,28 @@ class Display:
     def show(self):
         x = self.__x
         y = self.__y
-        color = "lightblue"
+        text_color = "black"
         size = 0.6
         font = pygame.font.SysFont("Helvetica", int(size * x))
         symb = pygame.font.SysFont("Helvetica", x)
-        pygame.draw.rect(self.screen, color, [x, y, 2 * x, y])  # TODO wygląd
-        pygame.draw.rect(self.screen, color, [4 * x, y, 2 * x, y])
-        pygame.draw.rect(self.screen, color, [7 * x, y, 2 * x, y])
-        pygame.draw.rect(self.screen, color, [10 * x, y, 2 * x, y])
+        self.__draw_rect(x, y, 2 * x, y)
+        self.__draw_rect(4 * x, y, 2 * x, y)
+        self.__draw_rect(7 * x, y, 2 * x, y)
+        self.__draw_rect(10 * x, y, 2 * x, y)
 
-        pygame.draw.rect(self.screen, color, [x, 3 * y, 2 * x, y])
-        label = symb.render("?", True, "white")
+        self.__draw_rect(x, 3 * y, 2 * x, y)
+        label = symb.render("?", True, text_color)
         text_rect = label.get_rect(center=(2 * x, int(1.5 * y + 2 * y)))
         self.screen.blit(label, text_rect)
 
-        pygame.draw.rect(self.screen, color, [10 * x, 3 * y, 2 * x, y])
-        label = symb.render("X", True, "white")
+        self.__draw_rect(10 * x, 3 * y, 2 * x, y)
+        label = symb.render("X", True, text_color)
         text_rect = label.get_rect(center=(11 * x, int(1.5 * y + 2 * y)))
         self.screen.blit(label, text_rect)
 
         txt = self.__word_obj.get_translation() if self.__all else "#"
-        pygame.draw.rect(self.screen, color, [4 * x, 3 * y, 5 * x, y])
-        label = font.render(txt, True, "white")
+        self.__draw_rect(4 * x, 3 * y, 5 * x, y)
+        label = font.render(txt, True, text_color)
         text_rect = label.get_rect(center=(int(6.5 * x), int(1.5 * y + 2 * y)))
         self.screen.blit(label, text_rect)
 
@@ -97,10 +98,15 @@ class Display:
             text_rect = label.get_rect(center=(2 * x + 3 * x * i, int(1.5 * y)))
             self.screen.blit(label, text_rect)
 
-        pygame.draw.rect(self.screen, color, [x, 5 * y, 11 * x, y])
-        label = font.render(self.__word, True, "white")
+        self.__draw_rect(x, 5 * y, 11 * x, y)
+        label = font.render(self.__word, True, text_color)
         text_rect = label.get_rect(center=(int(6.5 * x), int(1.5 * y + 4 * y)))
         self.screen.blit(label, text_rect)
+
+    def __draw_rect(self, x, y, x_size, y_size):
+        margin = 5
+        pygame.draw.rect(self.screen, "white", [x, y, x_size, y_size])
+        pygame.draw.rect(self.screen, "lightblue", [x + margin, y + margin, x_size - 2 * margin, y_size - 2 * margin])
 
     def get_input(self):
         for event in pygame.event.get():
@@ -147,11 +153,13 @@ class Display:
         else:
             self.__word += pygame.key.name(key)
 
-    @staticmethod
-    def __close():
+    def __close(self):
+        self.__closed = True
         pygame.display.quit()
         pygame.quit()
 
+    def is_closed(self):
+        return self.__closed
 
 def random_word():
     new = words.iloc[randint(0, words.size // 5)].values.tolist()
@@ -162,7 +170,7 @@ if __name__ == '__main__':
     wor = random_word()
     screen = Display(wor)
 
-    while True:
+    while not screen.is_closed():
         screen.flip()
         screen.show()
         screen.get_input()
