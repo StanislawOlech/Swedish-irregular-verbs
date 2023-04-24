@@ -47,7 +47,7 @@ class word:
         return self.__trans
 
 
-class Display:  # Klasa Display czyli frontend to co gracz widzi, spawn statkow wybuchy itp
+class Display:
     def __init__(self, word_obj):
         pygame.init()
         pygame.font.init()
