@@ -4,44 +4,47 @@ from pandas import read_excel
 
 words = read_excel("./words.xlsx")  # TODO różne formy
 
-# TODO hermetyzacja
+
 class word:
     def __init__(self, infinitiv, presens, preteritum, supinum, trans):
-        self.swedish = [infinitiv, presens, preteritum, supinum]
-        self.shown = ["#"] * 4
-        self.colours = ["white"] * 4
-        self.trans = trans
-        self.index = -1
+        self.__swedish = [infinitiv, presens, preteritum, supinum]
+        self.__shown = ["#"] * 4
+        self.__colours = ["white"] * 4
+        self.__trans = trans
+        self.__index = -1
 
         i = randint(0, 3)
-        self.shown[i] = self.swedish[i]
-        self.colours[i] = "blue"
+        self.__shown[i] = self.__swedish[i]
+        self.__colours[i] = "blue"
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        self.index += 1
-        if self.index >= len(self.swedish):
-            self.index = -1
+        self.__index += 1
+        if self.__index >= len(self.__swedish):
+            self.__index = -1
             raise StopIteration
-        return self.shown[self.index], self.colours[self.index]
+        return self.__shown[self.__index], self.__colours[self.__index]
 
     def check(self, txt):
         for i in range(4):
-            if self.shown[i] != self.swedish[i]:
-                self.shown[i] = self.swedish[i]
-                if self.swedish[i] == txt:
-                    self.colours[i] = "green"
+            if self.__shown[i] != self.__swedish[i]:
+                self.__shown[i] = self.__swedish[i]
+                if self.__swedish[i] == txt:
+                    self.__colours[i] = "green"
                 else:
-                    self.colours[i] = "red"
+                    self.__colours[i] = "red"
                 break
 
     def is_all(self):
         for i in range(4):
-            if self.shown[i] != self.swedish[i]:
+            if self.__shown[i] != self.__swedish[i]:
                 return False
         return True
+
+    def get_translation(self):
+        return self.__trans
 
 
 class Display:  # Klasa Display czyli frontend to co gracz widzi, spawn statkow wybuchy itp
@@ -50,53 +53,53 @@ class Display:  # Klasa Display czyli frontend to co gracz widzi, spawn statkow 
         pygame.font.init()
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         w, h = pygame.display.get_surface().get_size()
-        self.a = w // 13
-        self.b = h // 7
-        self.dis_text = ""
-        self.word = ""
-        self.word_obj = word_obj
-        self.all = False
+        self.__x = w // 13
+        self.__y = h // 7
+        self.__dis_text = ""
+        self.__word = ""
+        self.__word_obj = word_obj
+        self.__all = False
 
     def flip(self):
         pygame.display.flip()
         pygame.time.Clock().tick(60)
 
     def show(self):
-        a = self.a
-        b = self.b
+        x = self.__x
+        y = self.__y
         color = "lightblue"
         size = 0.6
-        font = pygame.font.SysFont("Helvetica", int(size * a))
-        symb = pygame.font.SysFont("Helvetica", a)
-        pygame.draw.rect(self.screen, color, [a, b, 2 * a, b]) # TODO wygląd
-        pygame.draw.rect(self.screen, color, [4 * a, b, 2 * a, b])
-        pygame.draw.rect(self.screen, color, [7 * a, b, 2 * a, b])
-        pygame.draw.rect(self.screen, color, [10 * a, b, 2 * a, b])
+        font = pygame.font.SysFont("Helvetica", int(size * x))
+        symb = pygame.font.SysFont("Helvetica", x)
+        pygame.draw.rect(self.screen, color, [x, y, 2 * x, y]) # TODO wygląd
+        pygame.draw.rect(self.screen, color, [4 * x, y, 2 * x, y])
+        pygame.draw.rect(self.screen, color, [7 * x, y, 2 * x, y])
+        pygame.draw.rect(self.screen, color, [10 * x, y, 2 * x, y])
 
-        pygame.draw.rect(self.screen, color, [a, 3 * b, 2 * a, b])
+        pygame.draw.rect(self.screen, color, [x, 3 * y, 2 * x, y])
         label = symb.render("?", True, "white")
-        text_rect = label.get_rect(center=(2 * a, int(1.5 * b + 2 * b)))
+        text_rect = label.get_rect(center=(2 * x, int(1.5 * y + 2 * y)))
         self.screen.blit(label, text_rect)
 
-        pygame.draw.rect(self.screen, color, [10 * a, 3 * b, 2 * a, b])
+        pygame.draw.rect(self.screen, color, [10 * x, 3 * y, 2 * x, y])
         label = symb.render("X", True, "white")
-        text_rect = label.get_rect(center=(11 * a, int(1.5 * b + 2 * b)))
+        text_rect = label.get_rect(center=(11 * x, int(1.5 * y + 2 * y)))
         self.screen.blit(label, text_rect)
 
-        txt = self.word_obj.trans if self.all else "#"
-        pygame.draw.rect(self.screen, color, [4 * a, 3 * b, 5 * a, b])
+        txt = self.__word_obj.get_translation() if self.__all else "#"
+        pygame.draw.rect(self.screen, color, [4 * x, 3 * y, 5 * x, y])
         label = font.render(txt, True, "white")
-        text_rect = label.get_rect(center=(int(6.5 * a), int(1.5 * b + 2 * b)))
+        text_rect = label.get_rect(center=(int(6.5 * x), int(1.5 * y + 2 * y)))
         self.screen.blit(label, text_rect)
 
-        for i, one_w in enumerate(self.word_obj):
+        for i, one_w in enumerate(self.__word_obj):
             label = font.render(one_w[0], True, one_w[1])
-            text_rect = label.get_rect(center=(2 * a + 3 * a * i, int(1.5 * b)))
+            text_rect = label.get_rect(center=(2 * x + 3 * x * i, int(1.5 * y)))
             self.screen.blit(label, text_rect)
 
-        pygame.draw.rect(self.screen, color, [a, 5 * b, 11 * a, b])
-        label = font.render(self.word, True, "white")
-        text_rect = label.get_rect(center=(int(6.5 * a), int(1.5 * b + 4 * b)))
+        pygame.draw.rect(self.screen, color, [x, 5 * y, 11 * x, y])
+        label = font.render(self.__word, True, "white")
+        text_rect = label.get_rect(center=(int(6.5 * x), int(1.5 * y + 4 * y)))
         self.screen.blit(label, text_rect)
 
     def get_input(self):
@@ -116,33 +119,33 @@ class Display:  # Klasa Display czyli frontend to co gracz widzi, spawn statkow 
         return None, None
 
     def mouse_effect(self, x, y):
-        a = self.a
-        b = self.b
+        a = self.__x
+        b = self.__y
 
         if 10 * a <= x <= 12 * a and 3 * b <= y <= 4 * b:
             self.close()
 
-        if a <= x <= 3 * a and 3 * b <= y <= 4 * b and not self.all:
-            self.word_obj.check("")
-            self.word = ""
-            self.all = self.word_obj.is_all()
+        if a <= x <= 3 * a and 3 * b <= y <= 4 * b and not self.__all:
+            self.__word_obj.check("")
+            self.__word = ""
+            self.__all = self.__word_obj.is_all()
 
     def keybord_effect(self, key):
         if key == pygame.K_RETURN:
-            if self.all:
-                self.dis_text = ""
-                self.word = ""
-                self.word_obj = random_word()
-                self.all = False
+            if self.__all:
+                self.__dis_text = ""
+                self.__word = ""
+                self.__word_obj = random_word()
+                self.__all = False
             else:
-                self.word_obj.check(self.word)
-                self.word = ""
-                self.all = self.word_obj.is_all()
+                self.__word_obj.check(self.__word)
+                self.__word = ""
+                self.__all = self.__word_obj.is_all()
 
         elif key == pygame.K_BACKSPACE:
-            self.word = self.word[:-1]
+            self.__word = self.__word[:-1]
         else:
-            self.word += pygame.key.name(key)
+            self.__word += pygame.key.name(key)
 
     @staticmethod
     def close():
