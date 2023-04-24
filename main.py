@@ -2,7 +2,7 @@ import pygame
 from random import randint
 from pandas import read_excel
 
-words = read_excel("./words.xlsx")  # TODO różne formy
+words = read_excel("./words.xlsx")
 
 
 class word:
