@@ -2,9 +2,9 @@ import pygame
 from random import randint
 from pandas import read_excel
 
-words = read_excel("./words.xlsx")
+words = read_excel("./words.xlsx")  # TODO różne formy
 
-
+# TODO hermetyzacja
 class word:
     def __init__(self, infinitiv, presens, preteritum, supinum, trans):
         self.swedish = [infinitiv, presens, preteritum, supinum]
@@ -68,7 +68,7 @@ class Display:  # Klasa Display czyli frontend to co gracz widzi, spawn statkow 
         size = 0.6
         font = pygame.font.SysFont("Helvetica", int(size * a))
         symb = pygame.font.SysFont("Helvetica", a)
-        pygame.draw.rect(self.screen, color, [a, b, 2 * a, b])
+        pygame.draw.rect(self.screen, color, [a, b, 2 * a, b]) # TODO wygląd
         pygame.draw.rect(self.screen, color, [4 * a, b, 2 * a, b])
         pygame.draw.rect(self.screen, color, [7 * a, b, 2 * a, b])
         pygame.draw.rect(self.screen, color, [10 * a, b, 2 * a, b])
@@ -122,7 +122,7 @@ class Display:  # Klasa Display czyli frontend to co gracz widzi, spawn statkow 
         if 10 * a <= x <= 12 * a and 3 * b <= y <= 4 * b:
             self.close()
 
-        if a <= x <= 3 * a and 3 * b <= y <= 4 * b:
+        if a <= x <= 3 * a and 3 * b <= y <= 4 * b and not self.all:
             self.word_obj.check("")
             self.word = ""
             self.all = self.word_obj.is_all()
@@ -151,7 +151,7 @@ class Display:  # Klasa Display czyli frontend to co gracz widzi, spawn statkow 
 
 
 def random_word():
-    new = words.iloc[randint(0, 158)].values.tolist()
+    new = words.iloc[randint(0, 158)].values.tolist()  # TODO rozmiar
     return word(new[0], new[1], new[2], new[3], new[4])
 
 
