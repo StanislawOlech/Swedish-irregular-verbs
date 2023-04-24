@@ -105,32 +105,32 @@ class Display:  # Klasa Display czyli frontend to co gracz widzi, spawn statkow 
     def get_input(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                Display.close()
+                Display.__close()
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = pygame.mouse.get_pos()
-                self.mouse_effect(x, y)
+                self.__mouse_effect(x, y)
                 return x, y
 
             elif event.type == pygame.KEYDOWN:
-                self.keybord_effect(event.key)
+                self.__keyboard_effect(event.key)
                 return event.key
 
         return None, None
 
-    def mouse_effect(self, x, y):
+    def __mouse_effect(self, x, y):
         a = self.__x
         b = self.__y
 
         if 10 * a <= x <= 12 * a and 3 * b <= y <= 4 * b:
-            self.close()
+            self.__close()
 
         if a <= x <= 3 * a and 3 * b <= y <= 4 * b and not self.__all:
             self.__word_obj.check("")
             self.__word = ""
             self.__all = self.__word_obj.is_all()
 
-    def keybord_effect(self, key):
+    def __keyboard_effect(self, key):
         if key == pygame.K_RETURN:
             if self.__all:
                 self.__dis_text = ""
@@ -148,7 +148,7 @@ class Display:  # Klasa Display czyli frontend to co gracz widzi, spawn statkow 
             self.__word += pygame.key.name(key)
 
     @staticmethod
-    def close():
+    def __close():
         pygame.display.quit()
         pygame.quit()
 
