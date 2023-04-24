@@ -1,8 +1,9 @@
 import pygame
 from random import randint
-import pandas
+from pandas import read_excel
 
-words = pandas.read_excel("./words.xlsx")
+words = read_excel("./words.xlsx")
+
 
 class word:
     def __init__(self, infinitiv, presens, preteritum, supinum, trans):
@@ -126,7 +127,6 @@ class Display:  # Klasa Display czyli frontend to co gracz widzi, spawn statkow 
             self.word = ""
             self.all = self.word_obj.is_all()
 
-
     def keybord_effect(self, key):
         if key == pygame.K_RETURN:
             if self.all:
@@ -149,14 +149,15 @@ class Display:  # Klasa Display czyli frontend to co gracz widzi, spawn statkow 
         pygame.display.quit()
         pygame.quit()
 
+
 def random_word():
     new = words.iloc[randint(0, 158)].values.tolist()
     return word(new[0], new[1], new[2], new[3], new[4])
 
+
 if __name__ == '__main__':
     wor = random_word()
     screen = Display(wor)
-
 
     while True:
         screen.flip()
