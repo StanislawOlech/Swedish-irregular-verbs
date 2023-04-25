@@ -68,6 +68,8 @@ class Display:
     def show(self):
         x = self.__x
         y = self.__y
+        w, h = pygame.display.get_surface().get_size()
+        pygame.draw.rect(self.screen, "black", [0, 0, w, h])
         text_color = "black"
         size = 0.6
         font = pygame.font.SysFont("Helvetica", int(size * x))
