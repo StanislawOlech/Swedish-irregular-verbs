@@ -152,7 +152,7 @@ class Display:
 
         elif key == pygame.K_BACKSPACE:
             self.__word = self.__word[:-1]
-        else:
+        elif len(pygame.key.name(key)) <= 1:
             self.__word += pygame.key.name(key)
 
     def __close(self):
