@@ -1,8 +1,12 @@
-import pygame
+import os
 from random import randint
-from pandas import read_excel
 
-words = read_excel("./words.xlsx")
+
+import pygame
+
+from openpyxl import load_workbook
+words = load_workbook("./words.xlsx")
+sheet = words.active
 
 
 class word:
@@ -163,9 +167,10 @@ class Display:
     def is_closed(self):
         return self.__closed
 
+
 def random_word():
-    new = words.iloc[randint(0, words.size // 5)].values.tolist()
-    return word(new[0], new[1], new[2], new[3], new[4])
+    new = sheet[randint(1, sheet.max_row)]
+    return word(str(new[0].value), str(new[1].value), str(new[2].value), str(new[3].value), str(new[4].value))
 
 
 if __name__ == '__main__':
